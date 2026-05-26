@@ -7,8 +7,8 @@
     <meta name="description" content="Sistema integral de gestión para restaurantes con facturación colombiana.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
@@ -22,15 +22,15 @@
                 <button class="close-modal" id="close-login" aria-label="Cerrar">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="login-form" class="login-form" novalidate>
+                <form id="login-form" class="login-form" novalidate="novalidate">
                     <div class="form-group input-icon">
                         <label for="login-user">Usuario</label>
-                        <input type="text" id="login-user" required placeholder="Correo o usuario" autocomplete="username">
+                        <input type="text" id="login-user" required="required" placeholder="Correo o usuario" autocomplete="username">
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="form-group input-icon">
                         <label for="login-pass">Contraseña</label>
-                        <input type="password" id="login-pass" required placeholder="Contraseña" autocomplete="current-password">
+                        <input type="password" id="login-pass" required="required" placeholder="Contraseña" autocomplete="current-password">
                         <button type="button" id="toggle-pass" class="show-pass" aria-label="Mostrar contraseña"><i class="fas fa-eye"></i></button>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px;">
@@ -120,12 +120,12 @@
                 <div class="res-form-card">
                     <h2>Nueva Reserva</h2>
                     <form id="res-form">
-                        <div class="form-group"><label>Nombre</label><input type="text" id="res-name" placeholder="Nombre completo" required></div>
+                        <div class="form-group"><label>Nombre</label><input type="text" id="res-name" placeholder="Nombre completo" required="required"></div>
                         <div class="form-group"><label>Teléfono</label><input type="text" id="res-phone" placeholder="3001234567"></div>
                         <div class="form-group"><label>Email</label><input type="email" id="res-email" placeholder="cliente@correo.com"></div>
-                        <div class="form-group"><label>Fecha</label><input type="date" id="res-date" required></div>
-                        <div class="form-group"><label>Hora</label><input type="time" id="res-time" required></div>
-                        <div class="form-group"><label>Personas</label><input type="number" id="res-people" min="1" max="12" value="2" required></div>
+                        <div class="form-group"><label>Fecha</label><input type="date" id="res-date" required="required"></div>
+                        <div class="form-group"><label>Hora</label><input type="time" id="res-time" required="required"></div>
+                        <div class="form-group"><label>Personas</label><input type="number" id="res-people" min="1" max="12" value="2" required="required"></div>
                         <div class="form-group"><label>Notas (opcional)</label><textarea id="res-notes" placeholder="Preferencias o requerimientos"></textarea></div>
                         <button type="submit" class="btn-primary btn-block">Enviar Solicitud de Reserva</button>
                     </form>
@@ -198,7 +198,7 @@
         <div class="cart-delivery" style="padding: 0 18px 12px;">
             <h3 style="margin:12px 0 8px; font-size:1rem; color:var(--secondary);">Opciones de Pedido</h3>
             <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
-                <label style="display:flex; gap:8px; align-items:center; font-weight:700;"><input type="radio" name="delivery-mode" id="delivery-pickup" value="pickup" checked> Recoger</label>
+                <label style="display:flex; gap:8px; align-items:center; font-weight:700;"><input type="radio" name="delivery-mode" id="delivery-pickup" value="pickup" checked="checked"> Recoger</label>
                 <label style="display:flex; gap:8px; align-items:center; font-weight:700;"><input type="radio" name="delivery-mode" id="delivery-delivery" value="delivery"> Envío a Domicilio</label>
             </div>
             <div id="delivery-fields" style="display:none;">
