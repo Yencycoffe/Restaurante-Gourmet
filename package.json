@@ -1,0 +1,20 @@
+{
+  "name": "gourmet-express",
+  "version": "1.0.0",
+  "description": "Sistema integral de gestión para restaurante - frontend estático",
+  "private": true,
+  "scripts": {
+    "lint:js": "eslint . --ext .js || true",
+    "lint:css": "stylelint \"**/*.css\" || true",
+    "lint:html": "htmlhint \"**/*.html\" || true",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "test": "echo \"No tests configured\" && exit 0",
+    "test:reservation": "node scripts/test-reservation.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "stylelint": "^15.0.0",
+    "stylelint-config-standard": "^32.0.0",
+    "htmlhint": "^1.4.3"
+  }
+}
