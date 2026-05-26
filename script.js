@@ -345,16 +345,25 @@ function handleReservation(e) {
     e.target.reset();
     showToast("Reserva guardada localmente");
 
-    // Prepare email (mailto) to send reservation to inbox
-    if (RESERVATION_EMAIL && RESERVATION_EMAIL.includes('@')) {
-        const subject = `Solicitud de Reserva - ${name}`;
-        const body = `Nueva solicitud de reserva%0D%0A%0D%0ANombre: ${name}%0D%0ATeléfono: ${phone}%0D%0AEmail: ${email}%0D%0AFecha: ${date}%0D%0AHora: ${time}%0D%0APersonas: ${people}%0D%0ANotas: ${notes}%0D%0A%0D%0AID: ${newRes.id}`;
-        const mailto = `mailto:${encodeURIComponent(RESERVATION_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${body}`;
-        // Open user's email client with prefilled values
-        window.location.href = mailto;
-    } else {
-        // If no email configured, show instructions
-        openModal('Enviar Reserva', `<p>La reserva se guardó localmente. Para notificar al restaurante, configure la dirección de correo en <strong>script.js</strong> (const RESERVATION_EMAIL).</p><p>Detalles de la reserva:</p><pre style="white-space:pre-wrap">${JSON.stringify(newRes, null, 2)}</pre>`);
+    // Try sending the reservation to serverless endpoint (Vercel)
+    try {
+        const resp = await fetch('/api/send-reservation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newRes)
+        });
+        if (resp.ok) {
+            showToast('Reserva enviada al restaurante');
+        } else {
+            const error = await resp.json().catch(() => null);
+            console.error('Reserva send error', error);
+            openModal('Reserva (pendiente)', `<p>La reserva se guardó localmente pero no pudo notificarse automáticamente.</p><p>Detalles:</p><pre style="white-space:pre-wrap">${JSON.stringify(newRes, null, 2)}</pre>`);
+            showToast('Reserva guardada localmente', 'danger');
+        }
+    } catch (err) {
+        console.error(err);
+        openModal('Reserva (pendiente)', `<p>La reserva se guardó localmente pero ocurrió un error al enviar la notificación automática.</p><pre style="white-space:pre-wrap">${JSON.stringify(newRes, null, 2)}</pre>`);
+        showToast('Error al notificar reserva', 'danger');
     }
 }
 
