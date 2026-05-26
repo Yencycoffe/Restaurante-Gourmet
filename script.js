@@ -17,12 +17,22 @@ if (!localStorage.getItem('rest_v25')) {
     localStorage.setItem('rest_v25', 'true');
 }
 
-let dishes = JSON.parse(localStorage.getItem('rest_dishes')) || DEFAULT_DISHES;
-let orders = JSON.parse(localStorage.getItem('rest_orders')) || [];
-let reservations = JSON.parse(localStorage.getItem('rest_reservations')) || [];
-let customers = JSON.parse(localStorage.getItem('rest_customers')) || [];
-let cart = JSON.parse(localStorage.getItem('rest_cart')) || [];
-let currentUser = JSON.parse(localStorage.getItem('rest_user')) || null;
+function safeParse(key, fallback) {
+    try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+    } catch (err) {
+        console.warn('localStorage parse error for', key, err);
+        return fallback;
+    }
+}
+
+let dishes = safeParse('rest_dishes', DEFAULT_DISHES);
+let orders = safeParse('rest_orders', []);
+let reservations = safeParse('rest_reservations', []);
+let customers = safeParse('rest_customers', []);
+let cart = safeParse('rest_cart', []);
+let currentUser = safeParse('rest_user', null);
 let activeCategory = 'all';
 let searchQuery = '';
 // Reservation email destination (update to your inbox)
@@ -317,7 +327,7 @@ function renderReservations() {
         </div>
     `).reverse().join('') : '<p style="text-align:center; color:gray">No hay reservas aún.</p>';
 }
-function handleReservation(e) {
+async function handleReservation(e) {
     e.preventDefault();
     const name = document.getElementById('res-name')?.value || (currentUser ? currentUser.name : 'Cliente Invitado');
     const phone = document.getElementById('res-phone')?.value || '';
