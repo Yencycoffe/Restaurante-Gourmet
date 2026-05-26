@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Express | Sistema Integral</title>
+    <meta name="description" content="Sistema integral de gestión para restaurantes con facturación colombiana.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="login-title" aria-modal="true">
+        <div class="modal login-card" role="document" style="max-width: 420px;">
+            <div class="modal-header">
+                <h2 id="login-title">Acceso a Gourmet Express</h2>
+                <button class="close-modal" id="close-login" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form" class="login-form" novalidate>
+                    <div class="form-group input-icon">
+                        <label for="login-user">Usuario</label>
+                        <input type="text" id="login-user" required placeholder="Correo o usuario" autocomplete="username">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="form-group input-icon">
+                        <label for="login-pass">Contraseña</label>
+                        <input type="password" id="login-pass" required placeholder="Contraseña" autocomplete="current-password">
+                        <button type="button" id="toggle-pass" class="show-pass" aria-label="Mostrar contraseña"><i class="fas fa-eye"></i></button>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px;">
+                        <label style="display:flex; align-items:center; gap:8px; font-weight:600;"><input type="checkbox" id="remember-me"> Recordarme</label>
+                        <a href="#" id="show-credentials" class="link-muted">¿Necesitas acceso?</a>
+                    </div>
+                    <button type="submit" class="btn-primary btn-block">Entrar</button>
+                    <div id="cred-hint" class="cred-hint hidden" style="margin-top:12px; font-size:0.85rem; color:var(--text-muted)">Credenciales de prueba: admin/admin123 · mesero/mesero123</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-fire"></i>
+                <span>Gourmet<span>Express</span></span>
+            </div>
+            
+            <nav class="main-nav" id="main-nav">
+                <!-- Dinámico -->
+            </nav>
+
+            <div class="header-actions">
+                <div class="user-info" id="user-display">
+                    <button id="login-trigger" class="btn-secondary" style="padding: 8px 15px; font-size: 0.8rem;"><i class="fas fa-user"></i> Acceso Personal</button>
+                    <div id="user-logged" class="hidden" style="display: flex; align-items: center; gap: 10px;">
+                        <span id="username-text">Invitado</span>
+                        <button id="logout-btn" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
+                </div>
+                <div class="cart-trigger" id="cart-btn">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- View: Menú -->
+        <section id="view-menu" class="view active">
+            <div class="menu-hero" style="background: var(--primary-gradient); padding: 40px; border-radius: var(--radius-lg); margin-bottom: 40px; color: white; position: relative; overflow: hidden;">
+                <div style="position: relative; z-index: 2;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 10px;">¡Bienvenido a Gourmet Express!</h1>
+                    <p style="font-size: 1.1rem; opacity: 0.9;">Descubre los mejores sabores de la cocina tradicional colombiana.</p>
+                </div>
+                <i class="fas fa-utensils" style="position: absolute; right: -20px; bottom: -20px; font-size: 10rem; opacity: 0.1; transform: rotate(-15deg);"></i>
+            </div>
+
+            <div class="menu-layout">
+                <aside class="categories-nav">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="dish-search" placeholder="Buscar plato...">
+                    </div>
+                    <ul id="category-list">
+                        <li class="active" data-category="all">Todos</li>
+                        <li data-category="Entradas">Entradas</li>
+                        <li data-category="Platos Fuertes">Platos Fuertes</li>
+                        <li data-category="Bebidas">Bebidas</li>
+                        <li data-category="Postres">Postres</li>
+                    </ul>
+                </aside>
+                <div class="menu-content">
+                    <h1 id="category-title">Carta Gourmet</h1>
+                    <div class="menu-grid" id="menu-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Mesero (Pedidos) -->
+        <section id="view-waiter" class="view">
+            <h1>Gestión de Pedidos</h1>
+            <div class="orders-board">
+                <div class="order-col"><h3>Pendientes</h3><div class="orders-list" id="list-pendiente"></div></div>
+                <div class="order-col"><h3>Preparando</h3><div class="orders-list" id="list-preparando"></div></div>
+                <div class="order-col"><h3>Listos</h3><div class="orders-list" id="list-listo"></div></div>
+                <div class="order-col"><h3>Entregados</h3><div class="orders-list" id="list-entregado"></div></div>
+            </div>
+        </section>
+
+        <!-- View: Reservas -->
+        <section id="view-reservations" class="view">
+            <div class="reservation-layout">
+                <div class="res-form-card">
+                    <h2>Nueva Reserva</h2>
+                    <form id="res-form">
+                        <div class="form-group"><label>Nombre</label><input type="text" id="res-name" placeholder="Nombre completo" required></div>
+                        <div class="form-group"><label>Teléfono</label><input type="text" id="res-phone" placeholder="3001234567"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="res-email" placeholder="cliente@correo.com"></div>
+                        <div class="form-group"><label>Fecha</label><input type="date" id="res-date" required></div>
+                        <div class="form-group"><label>Hora</label><input type="time" id="res-time" required></div>
+                        <div class="form-group"><label>Personas</label><input type="number" id="res-people" min="1" max="12" value="2" required></div>
+                        <div class="form-group"><label>Notas (opcional)</label><textarea id="res-notes" placeholder="Preferencias o requerimientos"></textarea></div>
+                        <button type="submit" class="btn-primary btn-block">Enviar Solicitud de Reserva</button>
+                    </form>
+                </div>
+                <div class="res-list-card">
+                    <h2>Reservas Próximas</h2>
+                    <div id="reservations-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Gestión Menú Admin -->
+        <section id="view-admin-menu" class="view">
+            <div class="section-header">
+                <h1>Administración de Menú</h1>
+                <button class="btn-primary" id="btn-add-dish"><i class="fas fa-plus"></i> Nuevo Plato</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Foto</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Acciones</th></tr></thead>
+                    <tbody id="admin-menu-table"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- View: Clientes -->
+        <section id="view-customers" class="view">
+            <div class="section-header">
+                <h1>Base de Datos Clientes</h1>
+                <button class="btn-primary" id="btn-add-customer"><i class="fas fa-user-plus"></i> Registrar Cliente</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Nombre</th><th>NIT/Cédula</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+                    <tbody id="customers-table"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- View: Reportes -->
+        <section id="view-reports" class="view">
+            <h1>Reportes de Ventas</h1>
+            <div class="stats-grid">
+                <div class="stat-card"><span class="stat-label">Ventas Hoy</span><span class="stat-value" id="stat-today-sales">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Pedidos Realizados</span><span class="stat-value" id="stat-total-orders">0</span></div>
+            </div>
+            <button class="btn-secondary" id="btn-cash-close" style="margin-bottom: 20px;"><i class="fas fa-cash-register"></i> Cierre de Caja</button>
+            <div class="table-container">
+                <h3>Historial de Ventas</h3>
+                <table>
+                    <thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th><th>PDF</th></tr></thead>
+                    <tbody id="history-table"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-shopping-bag" style="color: var(--primary); font-size: 1.5rem;"></i>
+                <h2 style="font-size: 1.5rem; margin: 0;">Tu Pedido</h2>
+            </div>
+            <button class="close-cart" id="close-cart" style="background: #f5f5f5; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer;">&times;</button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <!-- Delivery / Pickup options -->
+        <div class="cart-delivery" style="padding: 0 18px 12px;">
+            <h3 style="margin:12px 0 8px; font-size:1rem; color:var(--secondary);">Opciones de Pedido</h3>
+            <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+                <label style="display:flex; gap:8px; align-items:center; font-weight:700;"><input type="radio" name="delivery-mode" id="delivery-pickup" value="pickup" checked> Recoger</label>
+                <label style="display:flex; gap:8px; align-items:center; font-weight:700;"><input type="radio" name="delivery-mode" id="delivery-delivery" value="delivery"> Envío a Domicilio</label>
+            </div>
+            <div id="delivery-fields" style="display:none;">
+                <div class="form-group"><label>Dirección de Entrega</label><input type="text" id="delivery-address" placeholder="Calle, barrio, referencia"></div>
+                <div class="form-group"><label>Teléfono de Contacto</label><input type="text" id="delivery-phone" placeholder="3001234567"></div>
+                <div style="font-size:0.9rem; color:var(--text-muted);">Tarifa de envío plana: <strong id="delivery-fee-text">$0</strong></div>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total"><span>Total:</span><span id="cart-total-price">$0</span></div>
+            <button class="btn-primary btn-block" id="checkout-btn">Confirmar y Facturar</button>
+        </div>
+    </aside>
+
+    <!-- Generic Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="generic-modal">
+            <div class="modal-header"><h2 id="modal-title">Título</h2><button class="close-modal" id="close-modal">&times;</button></div>
+            <div class="modal-body" id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Gourmet Express | Desarrollado por <strong>Jorge Eliecer Castillo</strong></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
